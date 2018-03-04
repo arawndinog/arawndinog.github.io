@@ -5,7 +5,7 @@
 <script>
 $(document).ready(function(){
     $("button").click(function(){
-        $.getJSON("https://jsonplaceholder.typicode.com/posts", function(result){
+        $.getJSON("https://api.warframestat.us/ps4/cetusCycle", function(result){
             $.each(result, function(i, field){
                 $("div").append(field + " ");
             });
