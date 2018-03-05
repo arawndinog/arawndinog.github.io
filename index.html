@@ -7,20 +7,24 @@ $(document).ready( function() {
     getWorld();
     
     function getWorld() {
-        console.log("getworld start")
         $.getJSON("https://api.warframestat.us/pc", function(result){
             var currentTime = Date.now();
             var cetusExpiry = Date.parse(result["cetusCycle"]["expiry"]);
+            var cetusDay = result["cetusCycle"]["isDay"];
+            var cetusTimeOfDay = "Day";
+            if (!cetusDay) {
+                cetusTimeOfDay = "Night"
+            }
             var minutePassed = 0;
             var timeLeft;
             updateTimeLeft();
+            $(".timeOfDay").html(cetusTimeOfDay);
             $(".expiry").html(Date(cetusExpiry));
             $(".timeleft").html(msToTime(timeLeft));
             var countDown = setInterval(function() {
                 minutePassed += 1000;
                 updateTimeLeft();
                 $(".timeleft").html(msToTime(timeLeft));
-                console.log("counted " + minutePassed + " " + timeLeft)
                 if ((minutePassed >= 60000) || (timeLeft <= 0)) {
                     // a minute has passed/countdown expired
                     // stop countdown and rerun ajax
@@ -51,6 +55,7 @@ $(document).ready( function() {
 </script>
 </head>
 <body>
+    <div class="timeOfDay"></div>
     <div class="expiry"></div>
     <div class="timeleft"></div>
 </body>
