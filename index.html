@@ -4,6 +4,8 @@
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script>
 $(document).ready( function() {
+    getWorld();
+    
     function getWorld() {
         console.log("getworld start")
         $.getJSON("https://api.warframestat.us/pc", function(result){
@@ -18,8 +20,10 @@ $(document).ready( function() {
                 minutePassed += 1000;
                 updateTimeLeft();
                 $(".timeleft").html(msToTime(timeLeft));
-                console.log("counted" + minutePassed)
-                if (minutePassed >= 60000) {
+                console.log("counted " + minutePassed + " " + timeLeft)
+                if ((minutePassed >= 60000) || (timeLeft <= 0)) {
+                    // a minute has passed/countdown expired
+                    // stop countdown and rerun ajax
                     clearInterval(countDown);
                     getWorld();
                 }
@@ -29,9 +33,7 @@ $(document).ready( function() {
                 timeLeft = cetusExpiry - currentTime - minutePassed;
             }
         })
-        //setTimeout(getWorld,60000);
     }
-    getWorld();
     
     function msToTime(duration) {
         var milliseconds = parseInt((duration%1000)/100)
