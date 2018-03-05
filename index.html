@@ -4,46 +4,47 @@
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script>
 $(document).ready( function() {
-    $.ajaxSetup({ cache: false });
-    function getCetus() {
-        var timestamp;
-        var currentExpiry;
-        $.when(
-            $.getJSON('https://api.warframestat.us/pc/timestamp'),
-            $.getJSON('https://api.warframestat.us/pc/cetusCycle'),
-        ).done(function(result1, result2) {
-            timestamp = new Date(result1[0]);
-            currentExpiry = new Date(result2[0].expiry);
-            $(".expiry").html("Expiry: " + currentExpiry)
-            var countDownInterval = 1000
-            function countDown() {
-                $(".timeleft").html("Time left: " + timeLeft)
-                var timeLeft = currentExpiry - timestamp;
-                timeLeft -= countDownInterval
+    function getWorld() {
+        console.log("getworld start")
+        $.getJSON("https://api.warframestat.us/pc", function(result){
+            var currentTime = Date.now();
+            var cetusExpiry = Date.parse(result["cetusCycle"]["expiry"]);
+            var minutePassed = 0;
+            var timeLeft;
+            updateTimeLeft();
+            $(".expiry").html(Date(cetusExpiry));
+            $(".timeleft").html(msToTime(timeLeft));
+            var countDown = setInterval(function() {
+                minutePassed += 1000;
+                updateTimeLeft();
+                $(".timeleft").html(msToTime(timeLeft));
+                console.log("counted" + minutePassed)
+                if (minutePassed >= 60000) {
+                    clearInterval(countDown);
+                    getWorld();
+                }
+            }, 1000);
+            
+            function updateTimeLeft() {
+                timeLeft = cetusExpiry - currentTime - minutePassed;
             }
-            countDown()
-            setInterval(countDown,countDownInterval)
-            console.log(timestamp)
-            console.log(currentExpiry)
-        });
-        // $.getJSON("https://api.warframestat.us/pc/cetusCycle", function(result){
-        //     currentExpiry = Date(result["expiry"]);
-        //     console.log(currentExpiry)
-        //     // var currentTimeLeft = result["timeLeft"];
-        //     // var countDown = 0;
-        //     // setInterval(function() {
-        //     //     currentTimeLeft += countDown
-        //     //     //countDown += 1
-        //     //     $(".timeleft").html("Time left: " + currentTimeLeft)
-        //     // },1000);
-        //     // $(".expiry").html("Expiry: " + currentExpiry)
-        // });
-        // $.getJSON("https://api.warframestat.us/pc/timestamp", function(result){
-        //     timestamp = new Date(result);
-        // })
-        setTimeout(getCetus,60000);
+        })
+        //setTimeout(getWorld,60000);
     }
-    getCetus();
+    getWorld();
+    
+    function msToTime(duration) {
+        var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60))%24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds;
+    }
 });
 </script>
 </head>
