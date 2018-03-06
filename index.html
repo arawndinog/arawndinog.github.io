@@ -10,9 +10,6 @@ $(document).ready( function() {
         $.getJSON("https://api.warframestat.us/pc", function(result){
             var currentTime = Date.now();
             var cetusExpiry = Date.parse(result["cetusCycle"]["expiry"]);
-            if (cetusExpiry == null) {
-                setTimeout(getWorld, 10000);
-            }
             var cetusDay = result["cetusCycle"]["isDay"];
             var cetusTimeOfDay = "Day";
             if (!cetusDay) {
@@ -24,23 +21,29 @@ $(document).ready( function() {
             $(".timeOfDay").html(cetusTimeOfDay);
             $(".expiry").html(new Date(cetusExpiry));
             $(".timeleft").html(msToTime(timeLeft));
-            var countDown = setInterval(function() {
-                minutePassed += 1000;
-                updateTimeLeft();
-                $(".timeleft").html(msToTime(timeLeft));
-                if ((minutePassed >= 60000) || (timeLeft <= 0)) {
-                    // a minute has passed/countdown expired
-                    // stop countdown and rerun ajax
-                    if (timeLeft <= 0) {
-                        setTimeout(getWorld, 10000);
+            
+            if (cetusExpiry == null) {
+                setTimeout(getWorld, 10000);
+            } else {
+                var countDown = setInterval(function() {
+                    minutePassed += 1000;
+                    updateTimeLeft();
+                    $(".timeleft").html(msToTime(timeLeft));
+                    if ((minutePassed >= 60000) || (timeLeft <= 0)) {
+                        // a minute has passed/countdown expired
+                        // stop countdown and rerun ajax
+                        clearInterval(countDown);
+                        if (timeLeft <= 0) {
+                            setTimeout(getWorld, 10000);
+                        } else {
+                            getWorld();
+                        }
                     }
-                    clearInterval(countDown);
-                    getWorld();
-                }
-            }, 1000);
+                }, 1000);
+            }
             
             function updateTimeLeft() {
-                timeLeft = cetusExpiry - currentTime - minutePassed;
+                timeLeft = Math.max(0,(cetusExpiry - currentTime - minutePassed));
             }
         })
     }
