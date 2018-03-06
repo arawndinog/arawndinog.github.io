@@ -19,7 +19,7 @@ $(document).ready( function() {
             var timeLeft;
             updateTimeLeft();
             $(".timeOfDay").html(cetusTimeOfDay);
-            $(".expiry").html(Date(cetusExpiry));
+            $(".expiry").html(new Date(cetusExpiry));
             $(".timeleft").html(msToTime(timeLeft));
             var countDown = setInterval(function() {
                 minutePassed += 1000;
