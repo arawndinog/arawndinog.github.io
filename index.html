@@ -23,7 +23,7 @@ $(document).ready( function() {
             $(".timeleft").html(msToTime(timeLeft));
             
             if (cetusExpiry == null) {
-                setTimeout(getWorld, 10000);
+                setTimeout(getWorld, 5000);
             } else {
                 var countDown = setInterval(function() {
                     minutePassed += 1000;
@@ -34,7 +34,7 @@ $(document).ready( function() {
                         // stop countdown and rerun ajax
                         clearInterval(countDown);
                         if (timeLeft <= 0) {
-                            setTimeout(getWorld, 10000);
+                            setTimeout(getWorld, 5000);
                         } else {
                             getWorld();
                         }
