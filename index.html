@@ -1,74 +1,137 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
 <head>
-<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-<script>
-$(document).ready( function() {
-    getWorld();
-    
-    function getWorld() {
-        $.getJSON("https://api.warframestat.us/pc", function(result){
-            var currentTime = Date.now();
-            var cetusExpiry = Date.parse(result["cetusCycle"]["expiry"]);
-            var cetusDay = result["cetusCycle"]["isDay"];
-            var cetusTimeOfDay = "Day";
-            if (!cetusDay) {
-                cetusTimeOfDay = "Night";
-            }
-            var minutePassed = 0;
-            var timeLeft;
-            updateTimeLeft();
-            $(".timeOfDay").html(cetusTimeOfDay);
-            $(".expiry").html(new Date(cetusExpiry));
-            $(".timeleft").html(msToTime(timeLeft));
-            
-            if (cetusExpiry == null) {
-                setTimeout(getWorld, 5000);
-            } else {
-                var countDown = setInterval(function() {
-                    minutePassed += 1000;
-                    updateTimeLeft();
-                    $(".timeleft").html(msToTime(timeLeft));
-                    if ((minutePassed >= 60000) || (timeLeft <= 0)) {
-                        // a minute has passed/countdown expired
-                        // stop countdown and rerun ajax
-                        clearInterval(countDown);
-                        if (timeLeft <= 0) {
-                            setTimeout(getWorld, 5000);
-                        } else {
-                            getWorld();
-                        }
-                    }
-                }, 1000);
-            }
-            
-            function updateTimeLeft() {
-                timeLeft = Math.max(0,(cetusExpiry - currentTime - minutePassed));
-            }
-        })
-    }
-    
-    function msToTime(duration) {
-        var milliseconds = parseInt((duration%1000)/100)
-            , seconds = parseInt((duration/1000)%60)
-            , minutes = parseInt((duration/(1000*60))%60)
-            , hours = parseInt((duration/(1000*60*60))%24);
-
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-        return hours + ":" + minutes + ":" + seconds;
-    }
-});
-</script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <title>ML Demo</title>
 </head>
-<body style="background-color:white;">
-    <div class="timeOfDay"></div>
-    <div class="expiry"></div>
-    <div class="timeleft"></div>
-    <a href="https://warframe.wikia.com/wiki/WARFRAME_Wiki">Warframe Wiki</a>
-    <a href="https://hub.warframestat.us/">Warframe Hub</a>
-    <a href="https://www.youtube.com/">YouTube</a>
+
+<body>
+    <div style="width:100%; text-align: center;">
+        <div style="display:inline-block; max-width:1150px; text-align:left;">
+            <div class="module-box">
+                <span class="module-box-header">OCR</span><br />
+                <span class="module-box-description">Optical character recognition for single Chinese, English and
+                    number characters.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">OCR for Digits</span><br />
+                <span class="module-box-description">Optical character recognition for a string of digits.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">OCR for Digits with Background</span><br />
+                <span class="module-box-description">Given an image of a digit string and background template, recognize
+                    the digit string.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">OCR for Digits with Symbols</span><br />
+                <span class="module-box-description">Optical character recognition for a string of digits with various
+                    symbols and formats.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">OCR for English Sentence</span><br />
+                <span class="module-box-description">Optical character recognition for a string of alphabets.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Document Background Removal</span><br />
+                <span class="module-box-description">Given a background template, removes background while retaining
+                    handwritings.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Handwriting Extractor</span><br />
+                <span class="module-box-description">Removes printed parts, retains handwritten parts.
+                    Similar to document background removal, but without template.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Document Segmentation</span><br />
+                <span class="module-box-description">Segment documents into text, figures and tables.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Icon Classification</span><br />
+                <span class="module-box-description">Given an icon, returns most similar icon from database.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Object Detection</span><br />
+                <span class="module-box-description">#YOLO</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">IBCA</span><br />
+                <span class="module-box-description">Image-based comparison algorithm.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Document Binarization</span><br />
+                <span class="module-box-description">Binarization using Selectional Autoencoder.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Digit string labeler</span><br />
+                <span class="module-box-description">Crowdsourced labeler for digit string data.</span>
+            </div>
+
+            <div class="module-box">
+                <span class="module-box-header">Character Labeler</span><br />
+                <span class="module-box-description">Crowdsourced labeler for single characters.</span>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
+
+<style>
+    body {
+        font-family: Roboto, Arial, Helvetica, sans-serif;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .module-box {
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        box-sizing: border-box;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 10px;
+        width: 360px;
+        height: 100px;
+        padding: 10px;
+        color: black;
+        margin: 10px;
+    }
+
+    .module-box:hover {
+        transition: 0.2s;
+        background-color: black;
+        color: white;
+    }
+
+    .module-box-header {
+        font-size: 22px;
+    }
+
+    .module-box-description {
+        font-size: 13px;
+    }
+
+    .alpha-symbol {
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        color: grey;
+    }
+</style>
